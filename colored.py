@@ -64,7 +64,7 @@ class Colored(object):
     index_color = self.config.get("list_options_index")
     value_color = self.config.get("list_options_value")
     
-    """
+    
     for index, value in enumerate(iterable):
       print("{} [{}] {} {}".format(index_color, index, value_color, value))
     """
@@ -72,7 +72,7 @@ class Colored(object):
     for key, value in iterable.items():
       print("{} [{}] {} {}".format(index_color, key, value_color, value))
     
-      
+      """
     chosen = int(input())
     
     return list(iterable.values())[chosen]

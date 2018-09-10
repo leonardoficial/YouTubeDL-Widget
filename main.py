@@ -1,32 +1,7 @@
 from ydl        import Ydl
 from colored    import Colored
-
-"""
-# return title and duration of video json object
-def return_info(json):
-  title    = json.get("title")
-  duration = json.get("duration")
-
-  color.print_pair("title", title)
-
-  # convert seconds to minutes
-  min = timedelta(seconds=json.get("duration"))
-  color.print_pair("duration", min)
-
-
-# 
-def get_formats(json):
-  formats = {}
-
-  for obj in json.get("formats"):
-    formats[obj.get("ext")] = obj.get("format_id")
-    
-  return formats
-"""
-
-
-
-
+ 
+ 
 
 def main(): 
 
@@ -36,26 +11,43 @@ def main():
   color.print_value("- Please, enter URL -")
   url = input()
   
-  # STEP 1.1 - get video json object
+  # STEP 1.1 - create video json object
   ydl = Ydl(url)
 
-  # STEP 2.0 - return information about video
+  # STEP 2.0 - return information about video in json object
   title, duration = ydl.get_info()
   color.print_pair("title", title)
   color.print_pair("duration", duration)
   
-  # STEP 3.0 - asks user what is the desired format
-  format = color.list("\n- choose a format", ("video", "song", "thumbnail", "json"))
-  
-  if format == "video":
-    # list the availables exts for the desired format and asks one
-    exts = ydl.get_video_formats()
-    chosen_format = color.list_options(exts)
-    color.print_pair("chosen format", chosen_format)
+  # STEP 3.0 - asks user what is the desired format, checks if input is valid and prepare
+  # content to get downloaded
+  while True:
+    format = color.list("\n- choose a format", ("video", "audio", "thumbnail", "json"))
     
-    ydl.prepare("video", chosen_format)
-    ydl.download()
+    if format == "video":
+      # list the availables exts for the desired format and asks user to choose one
+      exts = ydl.get_video_formats()
+      chosen_format = color.list_options(exts)
+      color.print_pair("chosen format", chosen_format)
+    
+      ydl.prepare(format, chosen_format)
+      ydl.download()  
+      break
+    
+    elif format == "audio" or format == "thumbnail":
+      ydl.prepare(format)
+      ydl.download()  
+      break
+    
+    elif format == "json":
+      break
+        
+    elif format == "exit":
+      print("\Exiting")
+      break
   
+    else:
+      print("\nWrong format!")
 
 
 if __name__ == "__main__": 
