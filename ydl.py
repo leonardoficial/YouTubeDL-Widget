@@ -1,5 +1,6 @@
 from youtube_dl import YoutubeDL
 from datetime   import timedelta
+#from toolbar    import toolbar
 
 class Logger(object):
   def debug(self, msg):
@@ -15,7 +16,10 @@ class Logger(object):
 
 def hook(p):
   if p["status"] == "finished":
-    print("Downloading done!")
+    print("Download finished!")
+    
+  elif p["status"] == "downloading":
+    print(p)
 
 
 default_opts = {
@@ -60,7 +64,7 @@ class Ydl(object):
     return formats
     
   # resets self.opts object to default
-  def reset():
+  def reset(self):
     self.opts = default_opts.copy()
   
   #
