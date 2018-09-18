@@ -2,19 +2,36 @@ import os
 import sys
 import time
 
-ignore, toolbar_w = os.popen("stty size", "r").read().split()
-
-toolbar_w = int(toolbar_w) - 3
-
-# setup toolbar
-sys.stdout.write("[%s]" % (" " * toolbar_w))
-sys.stdout.flush()
-sys.stdout.write("\b" * (toolbar_w + 1)) # return to start of line, after '['
-
-for i in range(toolbar_w):
-    time.sleep(0.1) # do real work here
-    # update the bar
-    sys.stdout.write("-")
+class Toolbar(object):
+  def __init__(self):
+    # get console width
+    ignore, width = os.popen("stty size", "r").read().split()
+    
+    self.width = int(width) - 3
+    self._state = 0
+    
+  def setup(self):
+    # setup toolbar
+    sys.stdout.write("[%s]" % (" " * self.width))
     sys.stdout.flush()
+    sys.stdout.write("\b" * (self.width + 1)) # return to start of line, after '['
 
-sys.stdout.write("\n")
+  def progress(self, percent):
+    percent = int(percent)
+    if(self._state == 100):
+      print("")
+   
+      return 0
+    
+    """
+    if(self._state + percent >= 100):
+      _perc = int(self.width * ((percent - self._state) / 100))
+    """
+    
+    # update the bar
+    _perc = int(self.width * ((percent - self._state) / 100))
+    
+    sys.stdout.write("|" * _perc)
+    sys.stdout.flush()
+    
+    self._state = percent

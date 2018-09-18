@@ -1,6 +1,6 @@
 from youtube_dl import YoutubeDL
 from datetime   import timedelta
-#from toolbar    import toolbar
+from toolbar    import Toolbar
 
 class Logger(object):
   def debug(self, msg):
@@ -13,13 +13,17 @@ class Logger(object):
     print(msg)
 
 
+tool = Toolbar()
+
 
 def hook(p):
   if p["status"] == "finished":
     print("Download finished!")
     
   elif p["status"] == "downloading":
-    print(p)
+    perc = float(p["_percent_str"][:-1])
+    tool.progress(perc)
+    
 
 
 default_opts = {
@@ -91,7 +95,7 @@ class Ydl(object):
     
   # download content with defined props
   def download(self):
-    
+    tool.setup()
     with YoutubeDL(self.opts) as ydl:
       ydl.download([ self.url ])
       
